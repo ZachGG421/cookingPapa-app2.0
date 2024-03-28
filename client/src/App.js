@@ -1,11 +1,15 @@
 import logo from './logo.svg';
 import './App.css';
 import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import { Link } from 'react-router-dom';
 
-//test
+
 function App() {
+  
   const [data, setData] = useState(null);
-
+  
   useEffect(() => {
     const callBackendAPI = async () => {
       try {
@@ -22,14 +26,17 @@ function App() {
     callBackendAPI();
   }, []);
 
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img className="App-logo" src={logo} alt="logo" />
-        <h1 className="App-title">Welcome to React</h1>
-        <p style={{ color: "white" }}>{data}</p>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <Navbar />
+
+          {data && <p>{data}</p>}
+        </header>
+      </div>
+    </Router>
   );
 }
 
