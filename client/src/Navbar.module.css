@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap');
+
 * {
     padding: 0;
     margin: 0;
@@ -14,28 +16,52 @@ a {
     font-size: 18px;
 }
 
+.logo {
+    position: absolute;
+    width: auto; /* Width of the logo image. */
+    height: 80px; /* Height of the logo image. */
+    left: 25px; /* Position from the left edge of its container. */
+    top: 0px; /* Positioned at the top edge of its container. */
+}
+
 .navbar {
-    background-color: aliceblue;
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 40px;
     min-height: 70px;
-}
-
-.logo {
-    font-size: 30px;
-    font-family: Arial, Helvetica, sans-serif;
+    border-bottom: 2px solid #FA8D0C; 
 }
 
 .navMenu {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 60px;
+    gap: 20px;
+    position: fixed;
+    right: 0;
+    padding-right: 20px;
 }
 
+.navLink{
+    font-family: 'Mochiy Pop One';
+}
+.appTitle{
+    position: absolute;
+    width: 208px; /* Width of the text block. */
+    height: 30px; /* Height of the text block. */
+    left: 104px; /* Position from the left, making space for the logo. */
+    top: 29px; /* Centers the text vertically within the header. */
+    font-family: 'Mochiy Pop One'; /* Custom font for the text. */
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px; /* Size of the font. */
+    line-height: 52px; /* The height of each line of text. */
+    color: #000000; /* Color of the text. */
+}
+
+/* Responsive Hamburger */
 @media screen and (max-width: 780px) {
     .hamburger {
         display: block;

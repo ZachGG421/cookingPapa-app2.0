@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { Link } from 'react-router-dom';
+import DiscoverTool from './components/DiscoverTool';
 
 
 function App() {
@@ -32,8 +33,8 @@ function App() {
       <div className="App">
         <header className="App-header">
           <Navbar />
+          <DiscoverTool />
 
-          {data && <p>{data}</p>}
         </header>
       </div>
     </Router>

@@ -2,6 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../Navbar.module.css';
+import logo from '../images/cookingpapalogo.png'
 
 function Navbar() {
 
@@ -23,6 +24,13 @@ function Navbar() {
                 <nav className={`${styles.navbar}`}>
 
                     {/* logo */}
+                    <div className={styles.logoContainer}>
+                        <img src={logo} alt="Logo" className={styles.logo} />
+                    </div>
+
+                    <div className={styles.appTitle}>
+                        <h1>Cooking Papa</h1>
+                    </div>
 
                     {/* Navigation Menu */}
                     <ul className={`${styles.navMenu} ${isActive ? styles.active: ''}`}>
@@ -30,7 +38,7 @@ function Navbar() {
                             <Link to="#home" className={`${styles.navLink}`}>Homepage</Link>
                         </li>
                         <li onClick={removeActive}>
-                            <Link to="#RecipePage" className={`${styles.navLink}`}>Recipe Page</Link>
+                            <Link to="#RecipePage" className={`${styles.navLink}`}>Recipes</Link>
                         </li>
                         <li onClick={removeActive}>
                             <Link to="AboutUs" className={`${styles.navLink}`}>About Us</Link>

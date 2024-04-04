@@ -1,0 +1,47 @@
+/*
+
+.enterIngredientsTab{
+    width: 606px;
+    height: 469px;
+    left: 0px;
+    top: 0px;
+    background: beige;
+}
+
+.ingredientsListTab{
+    postion: absolute;
+    height: 469px;
+    width: 606px;
+    left: 50%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+    background: rgba(228, 228, 228, 0.3);
+}
+*/
+
+.discoverToolContainer {
+    display: flex;
+    flex-direction: row; /* Arrange child elements horizontally */
+    width: 100%;
+    max-width: 1212px; /* Adjust as needed */
+    margin: 0 auto;
+    height: 400px; /* Set the desired height */
+    border-bottom: 2px solid #FA8D0C; 
+}
+
+.enterIngredientsTab {
+    flex: 1; /* Each tab takes up equal space */
+    padding: 20px; /* Adjust as needed */
+    background-color: beige;
+}
+
+.ingredientsListTab {
+    flex: 1; /* Each tab takes up equal space */
+    padding: 20px; /* Adjust as needed */
+    background-color: rgba(228, 228, 228, 0.3);
+}
+
+
+
+
