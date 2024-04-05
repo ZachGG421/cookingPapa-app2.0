@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../Navbar.module.css';
-import logo from '../images/cookingpapalogo.png'
+import logo from '../assets/cookingpapalogo.png'
 
 function Navbar() {
 

@@ -33,9 +33,10 @@ function App() {
       <div className="App">
         <header className="App-header">
           <Navbar />
-          <DiscoverTool />
-
         </header>
+        <body>
+          <DiscoverTool />
+        </body>
       </div>
     </Router>
   );

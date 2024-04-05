@@ -33,6 +33,7 @@ function DiscoverTool() {
         <div className={`${styles.discoverToolContainer}`}>
             <div className={`${styles.enterIngredientsTab}`}>
                 <p>Enter your Ingredients:</p>
+                <div className={`${styles.enterIngredientsContent}`}>
                     <input 
                         type="text" 
                         value={ingredient} 
@@ -44,7 +45,8 @@ function DiscoverTool() {
                         } }
                         placeholder="Ingredient" 
                     />
-                <button onClick={addIngredient}>Add Ingredient</button>
+                    <button onClick={addIngredient}>Add Ingredient</button>
+                </div>
             </div>
             <div className={`${styles.ingredientsListTab}`}>
                 <div className="Ingredients-List">
