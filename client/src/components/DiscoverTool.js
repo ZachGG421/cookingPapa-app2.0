@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import styles from '../DiscoverTool.module.css';
 
-/*import { fetchRecipes } from './api'; */
-
-function DiscoverTool() {
+function DiscoverTool({ onSearch }) {
     const [ingredient, setIngredient] = useState('');
     const [ingredients, setIngredients] = useState([]);
-    const [recipes, setRecipes] = useState([]);
 
     const addIngredient = () => {
         if (ingredient) {
@@ -21,13 +18,9 @@ function DiscoverTool() {
         }
     }
 
-    const searchRecipes = async () => {
-        /*
-        const fetchedRecipes = await fetchRecipes(ingredients);
-        setRecipes(fetchedRecipes);
-        */
-       console.log("Making API request");
-    };
+    const searchRecipes = () => {
+        onSearch(ingredients);
+    }
 
     return (
         <div className={`${styles.discoverToolContainer}`}>
@@ -60,38 +53,12 @@ function DiscoverTool() {
                 <div className="removeIngredientButton">
                     <button onClick={removeIngredient}>Remove Ingredient</button>
                 </div>
+                <div className="searchRecipesButton">
+                    <button onClick={searchRecipes}>Search Recipes</button>
+                </div>
             </div>
-
-
-            
-
-
-
-
-
-            {/*    
-            <div>
-                <p>Ingredients List</p>
-                <ul>
-                    {ingredients.map((ing, index) => (
-                        <li key={index}>{ing}</li>
-                    ))}
-                </ul>
-                <button onClick={removeIngredient}>Remove Ingredient</button>
-            </div>
-            <button onClick={searchRecipes}>Search</button>
-            <div className="results-container">
-                {recipes.map(recipe => (
-                    <div key={recipe.id} className="recipe-container">
-                        <h2>{recipe.title}</h2>
-                        <img src={recipe.image} alt={recipe.title} />
-
-                    </div>
-                ))}
-            </div>
-              */}
         </div>
     );
-}
+};
 
 export default DiscoverTool;

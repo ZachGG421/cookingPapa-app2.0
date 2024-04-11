@@ -1,42 +1,38 @@
-import logo from './logo.svg';
 import './App.css';
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import { Link } from 'react-router-dom';
 import DiscoverTool from './components/DiscoverTool';
+import DiscoveryResults from './components/DiscoverResults.js'
+import Footer from './components/Footer.js'
 
 
 function App() {
   
-  const [data, setData] = useState(null);
-  
-  useEffect(() => {
-    const callBackendAPI = async () => {
+  const [ingredients, setIngredients] = useState([]);
+  const [recipes, setRecipes] = useState([]);
+
+  const searchRecipes = async (ingredients) => {
+    if (ingredients.length > 0 ) {
+      const ingredientsQuery = ingredients.join(',');
       try {
-        const response = await fetch("/api");
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const body = await response.json();
-        setData(body.message);
+        const response = await fetch(`/search-recipes?ingredients=${ingredientsQuery}`);
+        const data = await response.json();
+        setRecipes(data);
       } catch (error) {
-        console.error(error.message);
+        console.error("Error fetching recipes:", error);
       }
-    };
-    callBackendAPI();
-  }, []);
-
-
+    }
+  }
   return (
     <Router>
       <div className="App">
-        <header className="App-header">
           <Navbar />
-        </header>
-        <body>
-          <DiscoverTool />
-        </body>
+          <div className="mainContent">
+            <DiscoverTool setIngredients={setIngredients} onSearch={searchRecipes} />
+            <DiscoveryResults recipes={recipes} />
+          </div>
+          <Footer />
       </div>
     </Router>
   );

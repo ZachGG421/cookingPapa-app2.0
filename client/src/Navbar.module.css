@@ -25,6 +25,11 @@ a {
 }
 
 .navbar {
+    position: fixed; /* Fix the Navbar at the top of the viewport */
+    top: 0; /* Align the top edge of the Navbar with the top edge of the viewport */
+    left: 0; /* Align the left edge of the Navbar with the left edge of the viewport */
+    width: 100%; /* Navbar spans the full width of the viewport */
+    z-index: 1000; /* Ensure Navbar stays on top of other content */
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;

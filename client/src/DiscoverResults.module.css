@@ -1,0 +1,47 @@
+.resultsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    grid-gap: 20px; /* Gap between cards */
+    width: 100%;
+    max-width: 1212px; /* Adjust as needed */
+    margin: 0 auto; /* Center the grid */
+    padding: 20px; /* Padding around the grid */
+}
+
+.recipeCard {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    background-color: #fff; /* Card background */
+    border: 1px solid #ccc; /* Card border */
+    border-radius: 5px; /* Card border radius */
+}
+
+.recipeImage {
+    width: 80%; /* Make image fill the card width */
+    height: auto; /* Maintain aspect ratio */
+    border-top-left-radius: 5px; /* Round the top corners to match the card */
+    border-top-right-radius: 5px;
+}
+
+.recipeActions {
+    margin-top: auto; /* Push actions to the bottom */
+    padding: 10px;
+    display: flex;
+    justify-content: center; /* Center buttons */
+    gap: 10px; /* Space between buttons */
+}
+
+.recipeActions button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #FA8D0C; /* Button background */
+    color: #fff; /* Button text color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth background color transition on hover */
+}
+
+.recipeActions button:hover {
+    background-color: #e57c00; /* Darker shade on hover */
+}
