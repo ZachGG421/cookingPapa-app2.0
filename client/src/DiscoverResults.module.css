@@ -1,47 +1,72 @@
 .resultsGrid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columns */
-    grid-gap: 20px; /* Gap between cards */
+    grid-template-columns: repeat(3, 1fr); /* 3 columns for large screens */
+    grid-gap: 20px;
     width: 100%;
-    max-width: 1212px; /* Adjust as needed */
-    margin: 0 auto; /* Center the grid */
-    padding: 20px; /* Padding around the grid */
+    max-width: 1212px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Adjust grid for medium screens */
+@media (max-width: 1024px) {
+    .resultsGrid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for medium screens */
+    }
+}
+
+/* Adjust grid for small screens */
+@media (max-width: 768px) {
+    .resultsGrid {
+        grid-template-columns: 1fr; /* 1 column for small screens */
+    }
 }
 
 .recipeCard {
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    background-color: #fff; /* Card background */
-    border: 1px solid #ccc; /* Card border */
-    border-radius: 5px; /* Card border radius */
+    flex-direction: column;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .recipeImage {
-    width: 80%; /* Make image fill the card width */
-    height: auto; /* Maintain aspect ratio */
-    border-top-left-radius: 5px; /* Round the top corners to match the card */
+    width: 100%; /* Adjust image width to fill the card */
+    height: auto;
+    border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+    align-self: center; /* Center the image in the card */
+}
+
+.recipeTitle {
+    margin: 10px 0;
+    text-align: center;
+    font-size: 1em;
+    padding: 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .recipeActions {
-    margin-top: auto; /* Push actions to the bottom */
+    margin-top: auto;
     padding: 10px;
     display: flex;
-    justify-content: center; /* Center buttons */
-    gap: 10px; /* Space between buttons */
+    justify-content: center;
+    gap: 10px;
 }
 
 .recipeActions button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #FA8D0C; /* Button background */
-    color: #fff; /* Button text color */
+    background-color: #FA8D0C;
+    color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s; /* Smooth background color transition on hover */
+    transition: background-color 0.3s;
 }
 
 .recipeActions button:hover {
-    background-color: #e57c00; /* Darker shade on hover */
+    background-color: #e57c00;
 }

@@ -3,7 +3,7 @@
 * {
     padding: 0;
     margin: 0;
-    box-string: border-box;
+    box-sizing: border-box; /* corrected from box-string to box-sizing */
 }
 
 ul {
@@ -17,60 +17,54 @@ a {
 }
 
 .logo {
+    width: auto; /* Width of the logo image */
+    height: 80px; /* Height of the logo image */
     position: absolute;
-    width: auto; /* Width of the logo image. */
-    height: 80px; /* Height of the logo image. */
-    left: 25px; /* Position from the left edge of its container. */
-    top: 0px; /* Positioned at the top edge of its container. */
+    left: 25px; /* Position from the left edge of its container */
+    top: 0; /* Positioned at the top edge of its container */
 }
 
 .navbar {
-    position: fixed; /* Fix the Navbar at the top of the viewport */
-    top: 0; /* Align the top edge of the Navbar with the top edge of the viewport */
-    left: 0; /* Align the left edge of the Navbar with the left edge of the viewport */
-    width: 100%; /* Navbar spans the full width of the viewport */
-    z-index: 1000; /* Ensure Navbar stays on top of other content */
-    padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 40px;
-    min-height: 70px;
-    border-bottom: 2px solid #FA8D0C; 
+    padding: 0 25px; /* Padding on both sides */
+    height: 80px; /* Fixed height of navbar */
+    background-color: #333;
 }
 
 .navMenu {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 20px;
-    position: fixed;
-    right: 0;
-    padding-right: 20px;
+    gap: 30px; /* Spacing between links */
+    margin-left: auto; /* Pushes navMenu to the right */
 }
 
-.navLink{
+.navLink {
     font-family: 'Mochiy Pop One';
 }
-.appTitle{
+
+.appTitle {
     position: absolute;
-    width: 208px; /* Width of the text block. */
-    height: 30px; /* Height of the text block. */
-    left: 104px; /* Position from the left, making space for the logo. */
-    top: 29px; /* Centers the text vertically within the header. */
-    font-family: 'Mochiy Pop One'; /* Custom font for the text. */
+    width: 208px;
+    height: 30px;
+    left: 104px;
+    top: 29px;
+    font-family: 'Mochiy Pop One';
     font-style: normal;
     font-weight: 400;
-    font-size: 18px; /* Size of the font. */
-    line-height: 52px; /* The height of each line of text. */
-    color: #000000; /* Color of the text. */
+    font-size: 18px;
+    line-height: 52px;
+    color: #000000;
 }
 
-/* Responsive Hamburger */
 @media screen and (max-width: 780px) {
     .hamburger {
         display: block;
         cursor: pointer;
+        position: absolute;
+        right: 25px; /* Aligning the hamburger to the right */
+        top: 22px; /* Centering it vertically */
     }
 
     .bar {
@@ -78,17 +72,18 @@ a {
         width: 20px;
         height: 3px;
         display: block;
-        margin: 5px;
-        -webkit-transition: 0.3s ease-in-out;
+        margin: 5px auto; /* Centering bars inside the hamburger */
         transition: 0.3s ease-in-out;
     }
 
     .hamburger.active .bar:nth-child(2) {
         opacity: 0;
     }
+
     .hamburger.active .bar:nth-child(1) {
         transform: translateY(8px) rotate(45deg);
     }
+
     .hamburger.active .bar:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
     }

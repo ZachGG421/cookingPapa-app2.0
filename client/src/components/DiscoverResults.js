@@ -8,6 +8,7 @@ const DiscoverResults = ({ recipes }) => {
             {recipes.map((recipe, index) => (
                 <div key={index} className={styles.recipeCard}>
                     <img src={recipe.image} alt={recipe.title} className="{styles.recipeImage}" />
+                    <p className={styles.recipeTitle}>{recipe.title}</p>
                     <div className={styles.recipeActions}>
                         <button className={styles.likeButton}>Like</button>
                         <button className={styles.saveButton}>Save</button>
