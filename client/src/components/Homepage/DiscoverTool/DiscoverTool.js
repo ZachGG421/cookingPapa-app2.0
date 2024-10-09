@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from '../DiscoverTool.module.css';
+import styles from './DiscoverTool.module.css';
 
 function DiscoverTool({ onSearch }) {
     const [ingredient, setIngredient] = useState('');

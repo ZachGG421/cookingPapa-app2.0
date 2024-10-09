@@ -13,7 +13,7 @@
 .enterIngredientsTab {
     flex: 1;
     padding: 20px;
-    background-color: beige;
+    background-color: #E6CDAF;
 }
 
 .enterIngredientsTab p {
@@ -40,7 +40,7 @@
 .enterIngredientsTab button {
     padding: 10px;
     font-size: 16px;
-    background-color: #FA8D0C;
+    background-color: #fb6a49;
     color: #fff;
     border: none;
     border-radius: 5px;

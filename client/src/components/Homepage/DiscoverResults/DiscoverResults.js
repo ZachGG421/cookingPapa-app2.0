@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styles from '../DiscoverResults.module.css';
+import styles from './DiscoverResults.module.css';
 
 const DiscoverResults = ({ recipes }) => {
         console.log('Recipes:', recipes, 'Type:', typeof recipes);
