@@ -50,10 +50,10 @@ function DiscoverTool({ onSearch }) {
                     </ul>
                 </div>
 
-                <div className="removeIngredientButton">
+                <div className={`${styles.removeIngredientButton}`}>
                     <button onClick={removeIngredient}>Remove Ingredient</button>
                 </div>
-                <div className="searchRecipesButton">
+                <div className={`${styles.searchRecipesButton}`}>
                     <button onClick={searchRecipes}>Search Recipes</button>
                 </div>
             </div>

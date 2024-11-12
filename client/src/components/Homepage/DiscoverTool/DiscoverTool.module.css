@@ -42,7 +42,7 @@
     font-size: 16px;
     background-color: #fb6a49;
     color: #fff;
-    border: none;
+    border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -54,6 +54,26 @@
     background-color: rgba(228, 228, 228, 0.3);
 }
 
-.ingredientsListTab ul {
+/* Remove Ingredient Button */
+.removeIngredientButton button {
+    padding: 10px;
+    margin: 5px;
+    font-size: 16px;
+    background-color: #fb6a49;
+    color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
+/* Search Recipes Button */
+.searchRecipesButton button {
+    padding: 10px;
+    margin: 5px;
+    font-size: 16px;
+    background-color: #fb6a49;
+    color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
 }
