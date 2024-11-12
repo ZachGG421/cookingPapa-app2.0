@@ -1,0 +1,47 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modalContent {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+  }
+  
+  .recipeImage {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .modalActions {
+    margin-top: 20px;
+  }
+  
+  .modalActions button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #f59461;
+    color: white;
+  }
+  
+  .modalActions button:hover {
+    background-color: #e57c00;
+  }
+  
