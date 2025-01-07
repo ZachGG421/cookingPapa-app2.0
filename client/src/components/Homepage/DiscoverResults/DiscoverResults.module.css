@@ -48,6 +48,25 @@
     white-space: nowrap;
 }
 
+.recipeDescription {
+    margin: 20px;
+    text-align: center;
+}
+
+.recipeUsedIngre {
+    margin: 10px 0;
+    font-size: 0.9em;
+    color: #666;
+    text-align: center;
+}
+
+.recipeUnusedIngre {
+    margin: 10px 0;
+    font-size: 0.9em;
+    color: #666;
+    text-align: center;
+}
+
 .recipeActions {
     margin-top: auto;
     padding: 10px;
