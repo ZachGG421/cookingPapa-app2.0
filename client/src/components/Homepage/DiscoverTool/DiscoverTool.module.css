@@ -9,7 +9,7 @@
     margin-top: 0; /* Reduced to remove the gap */
 }
 
-/* Enter your Ingredients Container */
+/* Ingredients Container */
 .enterIngredientsTab {
     flex: 1;
     padding: 20px;
@@ -52,6 +52,54 @@
     flex: 1; /* Each tab takes up equal space */
     padding: 20px; /* Adjust as needed */
     background-color: rgba(228, 228, 228, 0.3);
+    display: flex; /* Maintain the existing container flex behavior */
+    flex-direction: column; /* Ensure child elements are stacked vertically */
+    align-items: flex-start; /* Align items to the left */
+    gap: 10px; /* Add spacing between sections inside this container */
+}
+
+/* Ingredient bubbles container (list) */
+.ingredientsListTab ul {
+    list-style: none; /* Remove default list styling */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
+    display: flex; /* Flex for the ingredient bubbles */
+    flex-wrap: wrap; /* Allow bubbles to wrap to the next line */
+    gap: 10px; /* Spacing between the bubbles */
+    
+}
+
+/* Individual ingredient bubble */
+.ingredientsListTab li {
+    display: flex; /* Align text and remove button horizontally */
+    align-items: center; /* Vertically center align the button and text */
+    background-color: #e6cdaf; /* Bubble background color */
+    border: 1px solid #ccc; /* Optional border for bubbles */
+    border-radius: 20px; /* Rounded corners for the bubble */
+    padding: 10px 15px; /* Inner padding for text and button */
+    font-size: 16px; /* Text size inside the bubble */
+    color: white; /* Text color */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Handle long text gracefully */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+
+}
+
+/* Remove button inside the bubble */
+.ingredientsListTab .removeButton {
+    margin-left: 10px; /* Space between text and the button */
+    padding: 5px 10px;
+    font-size: 12px;
+    background-color: #fb6a49; /* Light red background */
+    color: #fff; /* White text */
+    border: none; /* Remove border */
+    border-radius: 12px; /* Rounded corners for button */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+.ingredientsListTab .removeButton:hover {
+    background-color: #fb6a49; /* Darker red on hover */
 }
 
 /* Remove Ingredient Button */
@@ -64,6 +112,22 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.removeButton {
+    margin-left: 10px;
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #f66; /* Light red background */
+    color: #fff;           /* White text */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.removeButton:hover {
+    background-color: #c33; /* Darker red on hover */
 }
 
 /* Search Recipes Button */
