@@ -47,7 +47,7 @@ function App() {
         //updates recipeDetails state with fetched details
         setRecipeDetails((prevDetails) => ({
           ...prevDetails, //retain previous details
-          [id]: data, // add or overwrite details for current recipe ID
+          [id]: data, //add or overwrite details for current recipe ID
         }));
       } catch (error) {
         //log errors for troubleshooting
