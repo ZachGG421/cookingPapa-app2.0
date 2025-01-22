@@ -12,15 +12,13 @@ function DiscoverTool({ onSearch }) {
         }
     };
 
-    const removeIngredient = () => {
-        if(ingredients.length > 0) {
-            setIngredients(ingredients.slice(0,-1));
-        }
-    }
+    const removeSpecificIngredient = (indexToRemove) => {
+        setIngredients(ingredients.filter((_, index) => index !== indexToRemove));
+    };
 
     const searchRecipes = () => {
         onSearch(ingredients);
-    }
+    };
 
     return (
         <div className={`${styles.discoverToolContainer}`}>
@@ -41,19 +39,25 @@ function DiscoverTool({ onSearch }) {
                     <button onClick={addIngredient}>Add Ingredient</button>
                 </div>
             </div>
+
             <div className={`${styles.ingredientsListTab}`}>
                 <div className="Ingredients-List">
                     <ul>
                         {ingredients.map((ing, index) => (
-                        <li key={index}>{ing}</li>
+                        <li key={index}>
+                                {ing}
+                                <button
+                                    className={styles.removeButton}
+                                    onClick={() => removeSpecificIngredient(index)}
+                                >
+                                    x
+                                </button>
+                            </li>
                         ))}
                     </ul>
                 </div>
 
-                <div className="removeIngredientButton">
-                    <button onClick={removeIngredient}>Remove Ingredient</button>
-                </div>
-                <div className="searchRecipesButton">
+                <div className={`${styles.searchRecipesButton}`}>
                     <button onClick={searchRecipes}>Search Recipes</button>
                 </div>
             </div>

@@ -10,6 +10,8 @@ app.use(express.json());
 let fetch;
 import('node-fetch').then(({default: nodeFetch}) => {
   fetch = nodeFetch;
+
+  //Search recipes by ingredients 
   app.get("/search-recipes", async (req, res) => {
     const ingredients = req.query.ingredients;
     const url = `https://api.spoonacular.com/recipes/findByIngredients?apiKey=${apiKey}&ingredients=${ingredients}&number=12`;
@@ -22,6 +24,21 @@ import('node-fetch').then(({default: nodeFetch}) => {
       console.error("Error fetching recipes: ", error);
       res.status(500).send("Server error while fetching recipes");
 
+    }
+  });
+
+  //Fetch recipes by recipe ID
+  app.get("/recipe/:id", async (req,res) => {
+    const recipeID = req.params.id;
+    const url = `https://api.spoonacular.com/recipes/${recipeID}/information?apiKey=${apiKey}`;
+
+    try {
+      const apiResponse = await fetch(url);
+      const data = await apiResponse.json();
+      res.json(data);
+    } catch (error) {
+      console.error("Error fetching recipe details: ", error);
+      res.status(500).send("Server error while fetching recipe details");
     }
   });
 
