@@ -4,9 +4,9 @@ const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, unique: true },
-    likedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'recipe'}],
-    savedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'recipe'}],
+    likedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe'}],
+    savedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe'}],
 
 });
 
-module.exports = mongoose.modal('User', userSchema);
+module.exports = mongoose.model('User', userSchema);
