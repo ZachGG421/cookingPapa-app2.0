@@ -6,6 +6,7 @@ const cacheService = require('../cache/cacheService');
 const router = express.Router();
 const fetch = (...args) => import('node-fetch').then(({ default: nodeFetch }) => nodeFetch(...args));
 
+// POST: Save recipe in Cache 
 router.post('/cache/:id', async (req, res) => {
     const { id } = req.params;
     const recipeData = req.body;
@@ -18,7 +19,7 @@ router.post('/cache/:id', async (req, res) => {
     try {
         cacheService.set(id, recipeData);
 
-        // Verify cache storage immediately
+        // Verify cache storage
         const cachedRecipe = cacheService.get(id);
         console.log(`Recipe ${id} successfully stored in cache:`, cachedRecipe);
 
@@ -31,6 +32,29 @@ router.post('/cache/:id', async (req, res) => {
         return res.status(500).json({ error: 'Error caching recipe' });
     }
 });
+
+// POST: Save recipe in MongoDB
+router.post('/save', async (req, res) => {
+    try {
+        const recipeData = req.body;
+        if (!recipeData.apiId) {
+            return res.status(400).json({ error: 'Missing apiId field' });
+        }
+
+        const savedRecipe = await Recipe.findOneAndUpdate(
+            { apiId: recipeData.apiId },
+            { $set: recipeData },
+            { upsert: true, new: true }
+        );
+
+        console.log(`Successfully saved Recipe ${savedRecipe.apiId} to MongoDB`);
+        return res.status(201).json({ message: 'Recipe saved successfully', savedRecipe });
+    } catch (error) {
+        console.error('Error saving recipe:', error);
+        return res.status(500).json({ error: 'Failed to save recipe' });
+    }
+});
+
 
 // GET: Fetch recipe from cache or MongoDB
 router.get('/cache/:id', async (req, res) => {
@@ -61,38 +85,63 @@ router.get('/cache/:id', async (req, res) => {
     return res.status(404).json({ message: 'Recipe not found in cache or database' });
 });
 
-// GET: Fetch recipe by API ID (Cache → MongoDB → External API)
+// GET: Fetch recipe by API ID (Cache - MongoDB - API)
 router.get('/byApiId/:apiId', async (req, res) => {
     const { apiId } = req.params;
 
+    // Check Cache First
     if (cacheService.has(apiId)) {
+        console.log(`Cache hit for Recipe ID: ${apiId}`);
         return res.json(cacheService.get(apiId));
     }
 
+    // Check MongoDB
     try {
         const recipe = await Recipe.findOne({ apiId });
         if (recipe) {
-            cacheService.set(apiId, recipe);
+            console.log(`MongoDB hit for Recipe ID: ${apiId}`);
+            cacheService.set(apiId, recipe); // Store in cache
             return res.json(recipe);
         }
     } catch (error) {
         console.error('Error fetching recipe from MongoDB:', error);
     }
 
+    // Fetch from Spoonacular API if not found
     try {
+        console.log(`Fetching Recipe ${apiId} from Spoonacular API...`);
         const response = await fetch(`https://api.spoonacular.com/recipes/${apiId}/information?apiKey=${process.env.API_KEY}`);
         if (!response.ok) throw new Error(`Spoonacular API error: ${response.statusText}`);
 
         const apiRecipe = await response.json();
+
+        // Save the fetched recipe to MongoDB
+        console.log(`Saving Recipe ${apiRecipe.id} to MongoDB...`);
         const savedRecipe = await Recipe.findOneAndUpdate(
-            { apiId: apiRecipe.id },
-            { $set: apiRecipe },
+            { apiId: apiRecipe.id },  // Query by apiId
+            {
+                apiId: apiRecipe.id,
+                title: apiRecipe.title,
+                image: apiRecipe.image,
+                summary: apiRecipe.summary || "No summary available.",
+                readyInMinutes: apiRecipe.readyInMinutes || 0,
+                servings: apiRecipe.servings || 1,
+                dishTypes: apiRecipe.dishTypes || [],
+                cuisines: apiRecipe.cuisines || [],
+                extendedIngredients: apiRecipe.extendedIngredients || [],
+                instructions: Array.isArray(apiRecipe.instructions)
+                    ? apiRecipe.instructions.join('. ')
+                    : apiRecipe.instructions || "",
+            },
             { upsert: true, new: true }
         );
 
         if (savedRecipe) {
-            cacheService.set(apiId, savedRecipe);
+            console.log(`Successfully saved Recipe ${savedRecipe.apiId} to MongoDB`);
+            cacheService.set(apiId, savedRecipe); // Store in cache
             return res.json(savedRecipe);
+        } else {
+            throw new Error(`Failed to save Recipe ${apiId} to MongoDB`);
         }
     } catch (error) {
         console.error('Error fetching from Spoonacular API:', error);
@@ -100,19 +149,7 @@ router.get('/byApiId/:apiId', async (req, res) => {
     }
 });
 
-// POST: Save recipe in MongoDB
-router.post('/save', async (req, res) => {
-    try {
-        const recipe = await Recipe.findOneAndUpdate(
-            { apiId: req.body.id },
-            { $set: req.body },
-            { upsert: true, new: true }
-        );
-        return res.status(201).json({ message: 'Recipe saved successfully', recipe });
-    } catch (error) {
-        console.error('Error saving recipe:', error);
-        return res.status(500).json({ error: 'Failed to save recipe' });
-    }
-});
+
+
 
 module.exports = router;
