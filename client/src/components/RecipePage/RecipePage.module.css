@@ -1,0 +1,103 @@
+.recipePageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #FEF9ED;
+    padding: 40px;
+}
+
+.recipeCard {
+    background-color: #E6CDAF;
+    padding: 20px;
+    border-radius: 20px;
+    max-width: 900px;
+    width: 100%;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.recipeHeader {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.recipeImage {
+    width: 280px;
+    height: auto;
+    border-radius: 15px;
+}
+
+.recipeContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.recipeTitle {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.recipeDescription {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.recipeDetails {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(100px, 1fr)); /* ✅ Details in 3 columns */
+    gap: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+.recipeDetails p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.recipeBody {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.ingredientsContainer, .instructionsContainer {
+    flex: 1;
+}
+
+.ingredientsList, .instructionsList {
+    list-style: none;
+    padding: 0;
+}
+
+.ingredientItem, .instructionItem {
+    font-size: 14px;
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.ingredientItem input {
+    margin-right: 8px;
+}
+
+.recipeIcons {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.recipeIcons i {
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.recipeIcons i:hover {
+    transform: scale(1.1);
+}

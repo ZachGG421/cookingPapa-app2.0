@@ -1,202 +1,155 @@
 const express = require('express');
 const Recipe = require('../models/Recipe');
-const Ingredient = require('../models/Ingredient')
+const Ingredient = require('../models/Ingredient');
 const User = require('../models/User');
 const cacheService = require('../cache/cacheService');
 const router = express.Router();
+const fetch = (...args) => import('node-fetch').then(({ default: nodeFetch }) => nodeFetch(...args));
 
-let fetch;
-import('node-fetch').then(({ default: nodeFetch }) => {
-    fetch = nodeFetch
+// POST: Save recipe in Cache 
+router.post('/cache/:id', async (req, res) => {
+    const { id } = req.params;
+    const recipeData = req.body;
 
-    // Search for recipes through Cache - MongoDB - API
-    router.get('/search', async (req, res) => {
-        const { query } = req.query;
-    
-        // Check cache
-        if (cacheService.has(query)) {
-            console.log(`Cache hit for query: ${query}`);
-            return res.json(cacheService.get(query));
-        }
-        console.log(`Cache miss for query: ${query}`);
+    if (!recipeData || Object.keys(recipeData).length === 0) {
+        console.log(`POST /cache/${id} failed: No recipe data provided`);
+        return res.status(400).json({ error: 'No recipe data provided' });
+    }
 
-        // Check MongoDB
-        try {
-            const dbRecipes = await Recipe.find({ title: new RegExp(query, 'i') });
-            //console.log('Recipes found in MongoDB:', dbRecipes);
-            if (dbRecipes.length > 0) {
-                console.log(`MongoDB hit for query: ${query}`);
-                cacheService.set(query, dbRecipes);
-                return res.json(dbRecipes);
-            }
-            console.log(`MongoDB miss for query: ${query}`);
-        } catch (error) {
-            console.log('Error querying MongoDB:', error);
-        }
-    
-        // Fetch from Spoonacular API
-        try {
-            const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${query}&apiKey=${process.env.API_KEY}`);
-            const basicRecipes = await response.json();
-            //console.log('Basic Recipes:', basicRecipes);
+    try {
+        cacheService.set(id, recipeData);
 
-            // Fetch full details for each recipe
-            const detailedRecipes = await Promise.all(
-                basicRecipes.map(async (basicRecipe, index) => {
-                    const detailedResponse = await fetch(`https://api.spoonacular.com/recipes/${basicRecipe.id}/information?apiKey=${process.env.API_KEY}`);
-                    const detailedRecipe = await detailedResponse.json();
+        // Verify cache storage
+        const cachedRecipe = cacheService.get(id);
+        console.log(`Recipe ${id} successfully stored in cache:`, cachedRecipe);
 
-                    //Debugging
-                    if (index === 0) {
-                        console.log('First Detailed Recipe:', detailedRecipe);
-                    }
-
-                    return detailedRecipe;
-                })
-            );
-            
-            // Save recipes to MongoDB
-            const savedRecipes = await Promise.all(
-                detailedRecipes.map(async (recipe) => {
-                    try {
-                        const savedRecipe = await Recipe.findOneAndUpdate(
-                            { apiId: recipe.id },
-                            {
-                                $set: {
-                                    title: recipe.title,
-                                    image: recipe.image,
-                                    summary: recipe.summary || 'No summary available.',
-                                    readyInMinutes: recipe.readyInMinutes,
-                                    servings: recipe.servings,
-                                    sourceUrl: recipe.sourceUrl,
-                                    vegetarian: recipe.vegetarian,
-                                    vegan: recipe.vegan,
-                                    glutenFree: recipe.glutenFree,
-                                    dairyFree: recipe.dairyFree,
-                                    veryHealthy: recipe.veryHealthy,
-                                    cheap: recipe.cheap,
-                                    veryPopular: recipe.veryPopular,
-                                    sustainable: recipe.sustainable,
-                                    aggregateLikes: recipe.aggregateLikes,
-                                    healthScore: recipe.healthScore,
-                                    pricePerServing: recipe.pricePerServing,
-                                    extendedIngredients: Array.isArray(recipe.extendedIngredients) ? recipe.extendedIngredients : [],
-                                    instructions: recipe.instructions || 'No instructions provided.',
-                                    dishTypes: recipe.dishTypes || [],
-                                    cuisines: recipe.cuisines || [],
-                                    diets: recipe.diets || [],
-                                    createdBy: null,
-                                    source: 'api',
-                                },
-                            },
-                            { upsert: true, new: true }
-                        );
-                        return savedRecipe;
-                    } catch (error) {
-                        console.error(`Error saving recipe "${recipe.title}":`, error);
-                        return null;
-                    }
-                })
-            );
-            
-
-            const validRecipes = savedRecipes.filter((recipe) => recipe !== null);
-
-            // Cache valid recipes
-            cacheService.set(query, validRecipes);
-            //console.log(`Cache populated for query: ${query}`);
-    
-            res.json(validRecipes);
-        } catch (error) {
-            console.error(`Error fetching data for query: ${query}`, error);
-            res.status(500).json({ error: 'Failed to fetch recipes'});
-        }
-    });
-
-    // Add a user-generated recipe to MongoDB
-    router.post('/create', async (req, res) => {
-        const {
-            title,
-            image,
-            summary,
-            readyInMinutes,
-            servings,
-            ingredients,
-            instructions,
-            userId,
-        } = req.body;
-
-        try {
-            const savedIngredients = await Promise.all(
-                ingredients.map(async (ingredient) => {
-                    try {
-                        const savedIngredient = await Ingredient.findOneAndUpdate(
-                            { name: ingredient.name },
-                            { $setOnInsert: { name: ingredient.name, recipes: [] } },
-                            { upsert: true, new: true }
-                        );
-                        return savedIngredient._id;
-                    } catch (error) {
-                        console.error(`Error processing ingredient "${ingredient.name}":`, error.message);
-                        return null;
-                    }
-                })
-            );
-
-            const validIngredients = savedIngredients.filter((id) => id !== null);
-
-            // Create a new recipe
-            const newRecipe = new Recipe({
-                title,
-                image,
-                summary,
-                readyInMinutes,
-                servings,
-                ingredients: savedIngredients,
-                instructions,
-                createdBy: userId,
-                source: 'user',
-            });
-
-            const savedRecipe = await newRecipe.save();
-            res.status(201).json({ message: 'Recipe created successfully', recipe: savedRecipe });
-        } catch (error) {
-            console.error('Error creating recipe:', error);
-            res.status(500).json({ error: 'Failed to create recipe' });
-        }
-    });
-
-    // Fetch saved recipes for a user
-    router.get('/:userId/saved', async (req, res) => {
-        const { userId } = req.params;
-
-        try {
-            const user = await User.findById(userId).populate('savedRecipes');
-            if (!user) {
-                return res.status(404).json({ error: 'User not found' });
-            }
-            res.json(user.savedRecipes);
-        } catch (error) {
-            console.error('Error fetching saved recipes:', error);
-            res.status(500).json({ error: 'Failed to fetch saved recipes' });
-        }
-    });
-
-    // Fetch liked recipes for a user
-    router.get('/:userId/liked', async (req, res) => {
-        const { userId } = req.params;
-
-        try {
-            const user = await User.findById(userId).populate('likedRecipes');
-            if (!user) {
-                return res.status(404).json({ error: 'User not found' });
-            }
-            res.json(user.likedRecipes);
-        } catch (error) {
-            console.error('Error fetching liked recipes:', error);
-            res.status(500).json({ error: 'Failed to fetch liked recipes' });
-        }
-    });
+        return res.status(201).json({
+            message: `Recipe ${id} cached successfully`,
+            cachedRecipe: cachedRecipe,
+        });
+    } catch (error) {
+        console.error("Error caching recipe:", error);
+        return res.status(500).json({ error: 'Error caching recipe' });
+    }
 });
+
+// POST: Save recipe in MongoDB
+router.post('/save', async (req, res) => {
+    try {
+        const recipeData = req.body;
+        if (!recipeData.apiId) {
+            return res.status(400).json({ error: 'Missing apiId field' });
+        }
+
+        const savedRecipe = await Recipe.findOneAndUpdate(
+            { apiId: recipeData.apiId },
+            { $set: recipeData },
+            { upsert: true, new: true }
+        );
+
+        console.log(`Successfully saved Recipe ${savedRecipe.apiId} to MongoDB`);
+        return res.status(201).json({ message: 'Recipe saved successfully', savedRecipe });
+    } catch (error) {
+        console.error('Error saving recipe:', error);
+        return res.status(500).json({ error: 'Failed to save recipe' });
+    }
+});
+
+
+// GET: Fetch recipe from cache or MongoDB
+router.get('/cache/:id', async (req, res) => {
+    const { id } = req.params;
+
+    // Check if recipe is in cache
+    if (cacheService.has(id)) {
+        console.log(`Cache hit for recipe ID: ${id}`);
+        return res.json(cacheService.get(id)); // Send cached response
+    }
+
+    console.log(`Cache miss for recipe ID: ${id}, checking MongoDB...`);
+
+    try {
+        // If cache is empty, check MongoDB
+        const recipe = await Recipe.findOne({ apiId: id });
+        if (recipe) {
+            console.log(`MongoDB hit for recipe ID: ${id}, caching result...`);
+            cacheService.set(id, recipe); // Store in cache
+            return res.json(recipe);
+        }
+    } catch (error) {
+        console.error("Error fetching from MongoDB:", error);
+        return res.status(500).json({ error: 'Error checking database for recipe' });
+    }
+
+    console.log(`Recipe ${id} not found in cache or database.`);
+    return res.status(404).json({ message: 'Recipe not found in cache or database' });
+});
+
+// GET: Fetch recipe by API ID (Cache - MongoDB - API)
+router.get('/byApiId/:apiId', async (req, res) => {
+    const { apiId } = req.params;
+
+    // Check Cache First
+    if (cacheService.has(apiId)) {
+        console.log(`Cache hit for Recipe ID: ${apiId}`);
+        return res.json(cacheService.get(apiId));
+    }
+
+    // Check MongoDB
+    try {
+        const recipe = await Recipe.findOne({ apiId });
+        if (recipe) {
+            console.log(`MongoDB hit for Recipe ID: ${apiId}`);
+            cacheService.set(apiId, recipe); // Store in cache
+            return res.json(recipe);
+        }
+    } catch (error) {
+        console.error('Error fetching recipe from MongoDB:', error);
+    }
+
+    // Fetch from Spoonacular API if not found
+    try {
+        console.log(`Fetching Recipe ${apiId} from Spoonacular API...`);
+        const response = await fetch(`https://api.spoonacular.com/recipes/${apiId}/information?apiKey=${process.env.API_KEY}`);
+        if (!response.ok) throw new Error(`Spoonacular API error: ${response.statusText}`);
+
+        const apiRecipe = await response.json();
+
+        // Save the fetched recipe to MongoDB
+        console.log(`Saving Recipe ${apiRecipe.id} to MongoDB...`);
+        const savedRecipe = await Recipe.findOneAndUpdate(
+            { apiId: apiRecipe.id },  // Query by apiId
+            {
+                apiId: apiRecipe.id,
+                title: apiRecipe.title,
+                image: apiRecipe.image,
+                summary: apiRecipe.summary || "No summary available.",
+                readyInMinutes: apiRecipe.readyInMinutes || 0,
+                servings: apiRecipe.servings || 1,
+                dishTypes: apiRecipe.dishTypes || [],
+                cuisines: apiRecipe.cuisines || [],
+                extendedIngredients: apiRecipe.extendedIngredients || [],
+                instructions: Array.isArray(apiRecipe.instructions)
+                    ? apiRecipe.instructions.join('. ')
+                    : apiRecipe.instructions || "",
+            },
+            { upsert: true, new: true }
+        );
+
+        if (savedRecipe) {
+            console.log(`Successfully saved Recipe ${savedRecipe.apiId} to MongoDB`);
+            cacheService.set(apiId, savedRecipe); // Store in cache
+            return res.json(savedRecipe);
+        } else {
+            throw new Error(`Failed to save Recipe ${apiId} to MongoDB`);
+        }
+    } catch (error) {
+        console.error('Error fetching from Spoonacular API:', error);
+        return res.status(500).json({ error: 'Failed to fetch recipe' });
+    }
+});
+
+
+
 
 module.exports = router;

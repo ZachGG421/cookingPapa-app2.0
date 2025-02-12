@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Homepage from './components/Homepage/Homepage';
+import RecipePage from "./components/RecipePage/RecipePage";
 
 function App() {
   const [ingredients, setIngredients] = useState([]);
@@ -36,25 +37,23 @@ function App() {
 
   //function for getting recipe details by recipe ID
   const fetchRecipeDetails = async (id) => {
-    //check if the recipe details already cached
     if (!recipeDetails[id]) {
-      try {
+        try {
+            const response = await fetch(`/recipe/${id}`);
+            const data = await response.json();
 
-        //fetch recipe details using id query
-        const response = await fetch(`/recipe/${id}`);
-        const data = await response.json();
+            setRecipeDetails((prevDetails) => ({
+                ...prevDetails,
+                [id]: data,
+            }));
 
-        //updates recipeDetails state with fetched details
-        setRecipeDetails((prevDetails) => ({
-          ...prevDetails, //retain previous details
-          [id]: data, //add or overwrite details for current recipe ID
-        }));
-      } catch (error) {
-        //log errors for troubleshooting
-        console.error("Error fetching recipe details:", error);
-      }
+            return data;
+        } catch (error) {
+            console.error("Error fetching recipe details:", error);
+            return null;
+        }
     }
-  };
+};
 
   return (
     //wraps application in Router to enable navigation between pages
@@ -73,6 +72,7 @@ function App() {
             />
           } 
         />
+        <Route path="/recipes/:id" element={<RecipePage /> } />
       </Routes>
     </Router>
   );
