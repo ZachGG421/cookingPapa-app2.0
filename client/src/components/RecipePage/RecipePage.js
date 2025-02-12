@@ -118,7 +118,7 @@ const RecipePage = () => {
               <h1 className={styles.recipeTitle}>{recipe.title}</h1>
               <p className={styles.recipeDescription}>{formatDescription(recipe.summary)}</p>
               <div className={styles.recipeStats}>
-                <p><strong>Prep Time:</strong> {recipe.readyInMinutes ? `${recipe.readyInMinutes} mins` : "N/A"}</p>
+                <p><strong>Time to Make:</strong> {recipe.readyInMinutes ? `${recipe.readyInMinutes} mins` : "N/A"}</p>
                 <p><strong>Servings:</strong> {recipe.servings || "N/A"}</p>
               </div>
             </div>
