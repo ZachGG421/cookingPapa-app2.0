@@ -35,19 +35,19 @@ function Navbar() {
                     {/* Navigation Menu */}
                     <ul className={`${styles.navMenu} ${isActive ? styles.active: ''}`}>
                         <li onClick={removeActive}>
-                            <Link to="#home" className={`${styles.navLink}`}>Homepage</Link>
+                            <Link to="/" className={`${styles.navLink}`}>Homepage</Link>
                         </li>
                         <li onClick={removeActive}>
-                            <Link to="#RecipePage" className={`${styles.navLink}`}>Recipes</Link>
+                            <Link to="/recipes" className={`${styles.navLink}`}>Recipes</Link>
                         </li>
                         <li onClick={removeActive}>
-                            <Link to="AboutUs" className={`${styles.navLink}`}>About Us</Link>
+                            <Link to="/about" className={`${styles.navLink}`}>About Us</Link>
                         </li>
                         <li onClick={removeActive}>
-                            <Link to="#Contact" className={`${styles.navLink}`}>Contact</Link>
+                            <Link to="/contact" className={`${styles.navLink}`}>Contact</Link>
                         </li>
                         <li onClick={removeActive}>
-                            <Link to="Profile" className={`${styles.navLink}`}>Profile</Link>
+                            <Link to="/profile" className={`${styles.navLink}`}>Profile</Link>
                         </li>
                     </ul>
 

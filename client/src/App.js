@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Homepage from './components/Homepage/Homepage';
 import RecipePage from "./components/RecipePage/RecipePage";
+import RecipesPage from './components/RecipesPage/RecipesPage';
+import AboutUsPage from "./components/AboutUsPage/AboutUsPage";
+import ContactPage from "./components/ContactPage/ContactPage";
+import ProfilePage from "./components/ProfilePage/ProfilePage";
 
 function App() {
   const [ingredients, setIngredients] = useState([]);
@@ -73,6 +77,10 @@ function App() {
           } 
         />
         <Route path="/recipes/:id" element={<RecipePage /> } />
+        <Route path="/recipes" element={<RecipesPage />} />
+        <Route path="/about" element={<AboutUsPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </Router>
   );
