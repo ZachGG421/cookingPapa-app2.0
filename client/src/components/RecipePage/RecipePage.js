@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import styles from "./RecipePage.module.css";
@@ -17,12 +17,14 @@ const formatInstructions = (recipe) => {
   return [];
 };
 
-const RecipePage = () => {
+const RecipePage = ({ fetchRecipeDetails, recipeDetails }) => {
   const { id } = useParams();
-  const [recipe, setRecipe] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const location = useLocation(); //Get passed recipe from DiscoverResults.js
+  const [recipe, setRecipe] = useState(location.state?.recipe || recipeDetails?.[id] || null);
+  const [loading, setLoading] = useState(!recipe);
+  const [error, setError] = useState(null);
 
-  // ✅ Save Recipe to MongoDB
+  // Save Recipe to MongoDB
   const saveRecipeToMongoDB = async (recipe) => {
     if (!recipe || !recipe.id) return;
 
@@ -47,64 +49,70 @@ const RecipePage = () => {
       });
 
       if (response.ok) {
-        console.log(`✅ Recipe ${recipe.id} saved to MongoDB`);
+        console.log(`Recipe ${recipe.id} saved to MongoDB`);
       } else {
-        console.error(`❌ Failed to save Recipe ${recipe.id} to MongoDB`);
+        console.error(`Failed to save Recipe ${recipe.id} to MongoDB`);
       }
     } catch (error) {
-      console.error(`❌ Error saving Recipe ${recipe.id} to MongoDB:`, error);
+      console.error(`Error saving Recipe ${recipe.id} to MongoDB:`, error);
     }
   };
 
   useEffect(() => {
+    if (recipe) return;
+
     const fetchRecipe = async () => {
       setLoading(true);
-      setRecipe(null);
+      setError(null); // Reset error before fetching
 
       try {
-        // ✅ Check Cache First
+        // Check Cache First
         const cacheResponse = await fetch(`http://localhost:4000/api/cache/${id}`);
         if (cacheResponse.ok) {
           const cachedRecipe = await cacheResponse.json();
-          console.log(`✅ Cache hit for Recipe ${id}`);
+          console.log(`Cache hit for Recipe ${id}`);
           setRecipe(cachedRecipe);
-          await saveRecipeToMongoDB(cachedRecipe); // 🔥 Save to DB
+          await saveRecipeToMongoDB(cachedRecipe); // Save to DB
           setLoading(false);
           return;
         }
 
-        // ✅ Check MongoDB
+        // Check MongoDB
         const dbResponse = await fetch(`http://localhost:4000/api/recipes/byApiId/${id}`);
         if (dbResponse.ok) {
           const dbRecipe = await dbResponse.json();
-          console.log(`✅ MongoDB hit for Recipe ${id}`);
+          console.log(`MongoDB hit for Recipe ${id}`);
           setRecipe(dbRecipe);
-          await saveRecipeToMongoDB(dbRecipe); // 🔥 Save to DB
+          await saveRecipeToMongoDB(dbRecipe); // Save to DB
           setLoading(false);
           return;
         }
 
-        // ✅ Fetch from Spoonacular API
-        console.log(`🌎 Fetching Recipe ${id} from Spoonacular API...`);
+        // Fetch from Spoonacular API
+        console.log(`Fetching Recipe ${id} from Spoonacular API...`);
         const apiResponse = await fetch(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${process.env.REACT_APP_API_KEY}`);
         if (!apiResponse.ok) throw new Error(`API request failed for Recipe ${id}`);
 
         const apiRecipe = await apiResponse.json();
-        console.log(`✅ Fetched Recipe ${id} from API`);
+        console.log(`Fetched Recipe ${id} from API`);
         setRecipe(apiRecipe);
-        await saveRecipeToMongoDB(apiRecipe); // 🔥 Save to DB
+        await saveRecipeToMongoDB(apiRecipe); // Save to DB
 
       } catch (error) {
-        console.error("❌ Error fetching Recipe:", error);
+        console.error("Error fetching Recipe:", error);
+        setError("Failed to load recipe. Please try again.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRecipe();
+    if (!recipe) {
+      fetchRecipe();
+    }
   }, [id]);
 
   if (loading) return <p>Loading recipe details...</p>;
+  if (error) return <p className={styles.errorMessage}>{error}</p>;
   if (!recipe) return <p>Recipe not found.</p>;
 
   return (

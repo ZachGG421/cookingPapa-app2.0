@@ -76,7 +76,7 @@ function App() {
             />
           } 
         />
-        <Route path="/recipes/:id" element={<RecipePage /> } />
+        <Route path="/recipes/:id" element={<RecipePage fetchRecipeDetails={fetchRecipeDetails} recipeDetails={recipeDetails} />} />
         <Route path="/recipes" element={<RecipesPage />} />
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/contact" element={<ContactPage />} />
