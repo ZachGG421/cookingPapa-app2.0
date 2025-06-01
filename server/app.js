@@ -5,31 +5,17 @@ const mongoose = require("mongoose");
 const cacheService = require("./cache/cacheService");
 const userRoutes = require("./routes/userRoutes");
 const recipeRoutes = require("./routes/recipeRoutes");
+const authRoutes = require("./routes/authRoutes");
 const Recipe = require("./models/Recipe");
 
 const app = express();
 const port = process.env.PORT || 4000;
 const apiKey = process.env.API_KEY;
 
-//console.log("API Key:", process.env.API_KEY);
-
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI, {})
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
-
-// Check connection status 
-/*
-mongoose.connection.on('connected', () => {
-  console.log('Mongoose connected to MongoDB');
-});
-
-
-mongoose.connection.on('error', (err) => {
-  console.error('Mongoose connection error:', err);
-});
-*/ 
-
 
 app.use(cors());
 app.use(express.json());
@@ -37,6 +23,7 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/recipes", recipeRoutes);
 app.use("/api", recipeRoutes);
+app.use("/api/auth", authRoutes);
 
 let fetch;
 import('node-fetch').then(({default: nodeFetch}) => {
