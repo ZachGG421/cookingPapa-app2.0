@@ -6,6 +6,8 @@ import RecipesPage from './components/RecipesPage/RecipesPage';
 import AboutUsPage from "./components/AboutUsPage/AboutUsPage";
 import ContactPage from "./components/ContactPage/ContactPage";
 import ProfilePage from "./components/ProfilePage/ProfilePage";
+import LoginPage from "./components/LoginPage/LoginPage";
+import RegisterPage from "./components/RegisterPage/RegisterPage";
 
 function App() {
   const [ingredients, setIngredients] = useState([]);
@@ -81,6 +83,8 @@ function App() {
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
       </Routes>
     </Router>
   );
