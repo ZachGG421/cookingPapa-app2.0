@@ -1,6 +1,6 @@
 .pageContainer {
-  min-height: 100vh;
-  background-color: #fce7dc; /* light peach background */
+  min-height: 86vh;
+  background-color: #fce7dc;
   display: flex;
   justify-content: center;
   align-items: center;

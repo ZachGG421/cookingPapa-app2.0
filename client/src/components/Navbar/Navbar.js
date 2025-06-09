@@ -1,11 +1,24 @@
-import React from 'react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
 import logo from '../../assets/cookingpapalogo.png'
 import AuthModal from "../AuthModal/AuthModal";
 
 function Navbar() {
+
+    const navigate = useNavigate();
+
+    // Token state to track login status
+    const [token, setToken] = useState(localStorage.getItem("token"));
+
+    // Keep token state in sync with localStorage changes
+    useEffect(() => {
+        const handleStorageChange = () => {
+            setToken(localStorage.getItem("token"));
+        };
+        window.addEventListener("storage", handleStorageChange);
+        return () => window.removeEventListener("storage", handleStorageChange);
+    }, []);
 
     //adding the states
     const [isActive, setIsActive] = useState(false);
@@ -19,6 +32,12 @@ function Navbar() {
     //Cleanup function to remove active class
     const removeActive = () => {
         setIsActive(false);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        setToken(null);
+        navigate("/");
     };
 
     return(
@@ -48,19 +67,35 @@ function Navbar() {
                         <li onClick={removeActive}>
                             <Link to="/contact" className={`${styles.navLink}`}>Contact</Link>
                         </li>
-                        <li>
-                            <Link
-                                to="#"
-                                className={styles.navLink}
-                                onClick={(e) => {
-                                    e.preventDefault(); // stop default nav
-                                    removeActive();
-                                    setShowModal(true);
-                                }}
-                            >
-                            Profile
-                            </Link>
-                        </li>
+
+                        {/* Profile + Logout */}
+                        {token ? (
+                            <>
+                                <li onClick={removeActive}>
+                                    <Link to="/profile" className={styles.navLink}>Profile</Link>
+                                </li>
+                                <li onClick={removeActive}>
+                                    <button
+                                        onClick={handleLogout}
+                                        className={styles.logoutButton}
+                                    >
+                                        Logout
+                                        </button>
+                                </li>
+                            </>
+                            ) : (
+                                <li onClick={removeActive}>
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setShowModal(true);
+                                        }}
+                                        className={styles.navLink}
+                                    >
+                                    Profile
+                                    </button>
+                                </li>
+                            )}
                     </ul>
 
                     {/* Hamburger Menu*/}

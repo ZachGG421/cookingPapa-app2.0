@@ -60,6 +60,34 @@ a {
     color: #000000;
 }
 
+.navLink {
+  font-family: 'Mochiy Pop One';
+  font-size: 18px;
+  color: black;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: 52px; /* Optional: helps vertical alignment */
+}
+
+.logoutButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;             /* smaller than .navLink (which is 18px) */
+  color: black;
+  padding: 0;
+  margin-left: 6px;            /* optional spacing from Profile */
+  font-family: 'Mochiy Pop One';
+  opacity: 0.8;                /* slightly lighter */
+  transition: opacity 0.2s ease;
+}
+
+.logoutButton:hover {
+  opacity: 1;
+}
+
 @media screen and (max-width: 780px) {
     .hamburger {
         display: block;
