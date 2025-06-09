@@ -1,13 +1,28 @@
-import React from 'react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
 import logo from '../../assets/cookingpapalogo.png'
+import AuthModal from "../AuthModal/AuthModal";
 
 function Navbar() {
 
+    const navigate = useNavigate();
+
+    // Token state to track login status
+    const [token, setToken] = useState(localStorage.getItem("token"));
+
+    // Keep token state in sync with localStorage changes
+    useEffect(() => {
+        const handleStorageChange = () => {
+            setToken(localStorage.getItem("token"));
+        };
+        window.addEventListener("storage", handleStorageChange);
+        return () => window.removeEventListener("storage", handleStorageChange);
+    }, []);
+
     //adding the states
     const [isActive, setIsActive] = useState(false);
+    const [showModal, setShowModal ] = useState(false);
 
     //add the active class
     const toggleActiveClass = () => {
@@ -18,7 +33,13 @@ function Navbar() {
     const removeActive = () => {
         setIsActive(false);
     };
-    
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        setToken(null);
+        navigate("/");
+    };
+
     return(
             <header className="App-header">
                 <nav className={`${styles.navbar}`}>
@@ -46,9 +67,35 @@ function Navbar() {
                         <li onClick={removeActive}>
                             <Link to="/contact" className={`${styles.navLink}`}>Contact</Link>
                         </li>
-                        <li onClick={removeActive}>
-                            <Link to="/profile" className={`${styles.navLink}`}>Profile</Link>
-                        </li>
+
+                        {/* Profile + Logout */}
+                        {token ? (
+                            <>
+                                <li onClick={removeActive}>
+                                    <Link to="/profile" className={styles.navLink}>Profile</Link>
+                                </li>
+                                <li onClick={removeActive}>
+                                    <button
+                                        onClick={handleLogout}
+                                        className={styles.logoutButton}
+                                    >
+                                        Logout
+                                        </button>
+                                </li>
+                            </>
+                            ) : (
+                                <li onClick={removeActive}>
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setShowModal(true);
+                                        }}
+                                        className={styles.navLink}
+                                    >
+                                    Profile
+                                    </button>
+                                </li>
+                            )}
                     </ul>
 
                     {/* Hamburger Menu*/}
@@ -58,6 +105,7 @@ function Navbar() {
                         <span className={`${styles.bar}`}></span>
                     </div>
                 </nav>
+                {showModal && <AuthModal onClose={() => setShowModal(false)} />}
             </header>
     );
 }

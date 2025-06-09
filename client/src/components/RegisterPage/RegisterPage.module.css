@@ -1,0 +1,56 @@
+
+.pageContainer {
+  min-height: 86vh;
+  background-color: #fce7dc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Mochiy Pop One', sans-serif;
+}
+
+.card {
+  background-color: #fff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.card h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.inputField {
+  width: 100%;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #f47b42;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.button:hover {
+  background-color: #e26428;
+}
+
+.error {
+  color: red;
+  margin-top: 0.5rem;
+}
